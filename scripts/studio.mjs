@@ -19,6 +19,10 @@ const HOOKS = [
 ];
 const hook = HOOKS[DAY % HOOKS.length];
 
+// curated high-quality Pexels photo (no API key — direct CDN by ID, Pexels License)
+const photoId = project.photos[Math.floor(DAY / projects.length) % project.photos.length];
+const photoUrl = `https://images.pexels.com/photos/${photoId}/pexels-photo-${photoId}.jpeg?auto=compress&cs=tinysrgb&w=1600`;
+
 // ---------- caption ----------
 async function aiCaption() {
   const key = process.env.ANTHROPIC_API_KEY;
@@ -51,35 +55,34 @@ function templateCaption() {
   ].join("\n");
 }
 
-// ---------- design (1080x1080) ----------
+// ---------- design (1080x1080) — full-bleed photo + brand gradient overlay ----------
 function buildHtml() {
   return `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1080px;height:1080px;overflow:hidden}
-body{font-family:'Cairo',sans-serif;color:#0f172a;background:#fff;
- background-image:radial-gradient(#e9eef5 1.5px,transparent 1.5px);background-size:30px 30px;position:relative}
-.bar{position:absolute;top:0;right:0;left:0;height:14px;background:linear-gradient(90deg,${project.accent},${project.accent2})}
-.blob{position:absolute;bottom:-160px;left:-160px;width:420px;height:420px;border-radius:50%;
- background:radial-gradient(circle at 30% 30%,${project.accent}22,transparent 70%)}
-.wrap{position:absolute;inset:0;padding:96px 92px 88px;display:flex;flex-direction:column}
-.top{display:flex;align-items:center;gap:18px;margin-bottom:54px}
-.top img{height:60px;width:auto}
-.brand{font-family:'Inter',sans-serif;font-weight:700;font-size:26px;letter-spacing:.02em;color:#0f172a}
-.kicker{font-family:'Inter',sans-serif;font-weight:700;font-size:18px;letter-spacing:.2em;text-transform:uppercase;color:${project.accent};margin-bottom:22px;display:flex;align-items:center;gap:12px}
-.kicker::before{content:"";width:40px;height:3px;background:${project.accent};border-radius:3px}
-h1{font-weight:900;font-size:78px;line-height:1.12;letter-spacing:-.01em;
- background:linear-gradient(135deg,${project.accent},${project.accent2});-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.desc{margin-top:30px;font-size:36px;font-weight:600;color:#475569;line-height:1.55}
+body{font-family:'Cairo',sans-serif;position:relative;background:#0f172a}
+.photo{position:absolute;inset:0;background:url('${photoUrl}') center/cover no-repeat;transform:scale(1.05)}
+.ov{position:absolute;inset:0;background:linear-gradient(135deg,rgba(8,12,24,.92) 0%,${project.accent2}e0 50%,${project.accent}9c 100%)}
+.grain{position:absolute;inset:0;background:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:26px 26px}
+.bar{position:absolute;top:0;right:0;left:0;height:14px;background:linear-gradient(90deg,#fff6,${project.accent})}
+.wrap{position:absolute;inset:0;padding:92px 88px 84px;display:flex;flex-direction:column;color:#fff}
+.top{display:flex;align-items:center;gap:14px;margin-bottom:48px}
+.dot{width:46px;height:46px;border-radius:13px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 8px 22px rgba(0,0,0,.3)}
+.brand{font-family:'Inter',sans-serif;font-weight:700;font-size:30px;letter-spacing:.01em;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.kicker{font-family:'Inter',sans-serif;font-weight:700;font-size:19px;letter-spacing:.24em;text-transform:uppercase;color:#fff;opacity:.9;margin-bottom:22px;display:flex;align-items:center;gap:12px}
+.kicker::before{content:"";width:44px;height:3px;background:#fff;border-radius:3px}
+h1{font-weight:900;font-size:82px;line-height:1.1;letter-spacing:-.01em;text-shadow:0 4px 26px rgba(0,0,0,.45)}
+.desc{margin-top:28px;font-size:36px;font-weight:600;line-height:1.55;color:#fff;opacity:.94;max-width:880px;text-shadow:0 2px 14px rgba(0,0,0,.4)}
 .spacer{flex:1}
-.foot{display:flex;align-items:center;justify-content:space-between;border-top:2px solid #eef2f7;padding-top:34px}
-.cta{background:${project.accent};color:#fff;font-weight:800;font-size:30px;padding:18px 42px;border-radius:16px;box-shadow:0 14px 30px ${project.accent}3d}
-.url{font-family:'Inter',sans-serif;font-weight:700;font-size:30px;color:#0f172a}
+.foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.25);padding-top:32px}
+.cta{background:#fff;color:${project.accent2};font-weight:800;font-size:30px;padding:18px 44px;border-radius:16px;box-shadow:0 16px 34px rgba(0,0,0,.35)}
+.url{font-family:'Inter',sans-serif;font-weight:700;font-size:30px;text-shadow:0 2px 10px rgba(0,0,0,.4)}
 </style></head><body>
-<div class="bar"></div><div class="blob"></div>
+<div class="photo"></div><div class="ov"></div><div class="grain"></div><div class="bar"></div>
 <div class="wrap">
- <div class="top"><img src="${project.logo}" onerror="this.style.display='none'"><span class="brand">${project.name} ${project.flag}</span></div>
+ <div class="top"><span class="dot">${project.flag}</span><span class="brand">${project.name}</span></div>
  <div class="kicker">${project.name}</div>
  <h1>${feat.t}</h1>
  <div class="desc">${feat.d}</div>
@@ -94,8 +97,8 @@ writeFileSync("caption.txt", caption, "utf8");
 const browser = await chromium.launch({ args: ["--no-sandbox"] });
 const page = await browser.newPage({ viewport: { width: 1080, height: 1080 }, deviceScaleFactor: 2 });
 await page.setContent(buildHtml(), { waitUntil: "networkidle" });
-await page.waitForTimeout(800); // let webfonts settle
+await page.waitForTimeout(1600); // let webfonts + Pexels photo settle
 await page.screenshot({ path: "out.png" });
 await browser.close();
 
-console.log(`project=${project.key} feature="${feat.t}" caption_len=${caption.length}`);
+console.log(`project=${project.key} feature="${feat.t}" photo=${photoId} caption_len=${caption.length}`);
