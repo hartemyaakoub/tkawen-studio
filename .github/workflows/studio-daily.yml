@@ -1,0 +1,73 @@
+name: 🎨 TKAWEN Studio (daily design → Telegram)
+
+# Generates a daily social post (Arabic caption + rendered 1080x1080 design) for
+# a rotating TKAWEN project and delivers it to the founder's private Telegram.
+# Runs while you sleep. Optional: set ANTHROPIC_API_KEY for AI-written copy.
+
+on:
+  schedule:
+    - cron: "0 6 * * *"    # 06:00 UTC ≈ 07:00 Algeria
+  workflow_dispatch:
+    inputs:
+      day:
+        description: "Override day index (rotation)"
+        required: false
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  design:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Playwright + chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm i playwright@1.48.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+
+      - name: Generate post + design
+        id: gen
+        env:
+          DAY: ${{ github.event.inputs.day || '' }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          export DAY="${DAY:-$(date -u +%j)}"
+          node scripts/studio.mjs | tee gen.log
+          echo "proj=$(grep -oE 'project=[a-z]+' gen.log | cut -d= -f2)" >> $GITHUB_OUTPUT
+
+      - name: Deliver to Telegram
+        env:
+          TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -z "$TOKEN" ]; then echo "no telegram secret"; exit 0; fi
+          test -s out.png || { echo "no image rendered"; exit 1; }
+          curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendPhoto" \
+            -F "chat_id=${CHAT}" \
+            -F "photo=@out.png" \
+            -F "caption=<caption.txt" \
+            -o resp.json -w "sendPhoto HTTP %{http_code}\n"
+          grep -q '"ok":true' resp.json && echo "✅ delivered" || { echo "❌ telegram failed"; cat resp.json; }
+
+      - name: Archive design
+        run: |
+          mkdir -p .data/studio
+          DATE=$(date -u +%Y-%m-%d)
+          cp out.png ".data/studio/${DATE}-${{ steps.gen.outputs.proj }}.png" 2>/dev/null || true
+          cp caption.txt ".data/studio/${DATE}-${{ steps.gen.outputs.proj }}.txt" 2>/dev/null || true
+          git config user.email "bot@tkawen.com"
+          git config user.name "TKAWEN Studio"
+          git add .data/studio/ || true
+          git diff --cached --quiet || git commit -m "studio: ${DATE} ${{ steps.gen.outputs.proj }}"
+          for i in 1 2 3; do git pull --rebase origin HEAD && git push origin HEAD && break || { echo "retry $i"; sleep 3; }; done
