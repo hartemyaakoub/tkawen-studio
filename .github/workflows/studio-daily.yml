@@ -60,14 +60,24 @@ jobs:
             -o resp.json -w "sendPhoto HTTP %{http_code}\n"
           grep -q '"ok":true' resp.json && echo "✅ delivered" || { echo "❌ telegram failed"; cat resp.json; }
 
-      - name: Archive design
+      - name: Archive design + update gallery (GitHub Pages)
         run: |
-          mkdir -p .data/studio
+          mkdir -p gallery
           DATE=$(date -u +%Y-%m-%d)
-          cp out.png ".data/studio/${DATE}-${{ steps.gen.outputs.proj }}.png" 2>/dev/null || true
-          cp caption.txt ".data/studio/${DATE}-${{ steps.gen.outputs.proj }}.txt" 2>/dev/null || true
+          PROJ="${{ steps.gen.outputs.proj }}"
+          FNAME="${DATE}-${PROJ}-${{ github.run_number }}.png"
+          cp out.png "gallery/${FNAME}"
+          PROJ="$PROJ" DATE="$DATE" FNAME="$FNAME" python3 - <<'PY'
+          import json, os
+          try: items = json.load(open("designs.json"))
+          except Exception: items = []
+          cap = open("caption.txt", encoding="utf-8").read().strip()
+          items.insert(0, {"img": "gallery/"+os.environ["FNAME"], "project": os.environ["PROJ"],
+                           "date": os.environ["DATE"], "caption": cap})
+          json.dump(items[:150], open("designs.json", "w"), ensure_ascii=False, indent=1)
+          PY
           git config user.email "bot@tkawen.com"
           git config user.name "TKAWEN Studio"
-          git add .data/studio/ || true
-          git diff --cached --quiet || git commit -m "studio: ${DATE} ${{ steps.gen.outputs.proj }}"
+          git add gallery/ designs.json || true
+          git diff --cached --quiet || git commit -m "studio: ${DATE} ${PROJ} (gallery)"
           for i in 1 2 3; do git pull --rebase origin HEAD && git push origin HEAD && break || { echo "retry $i"; sleep 3; }; done

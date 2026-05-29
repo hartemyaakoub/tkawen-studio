@@ -69,8 +69,9 @@ body{font-family:'Cairo',sans-serif;position:relative;background:#0f172a}
 .bar{position:absolute;top:0;right:0;left:0;height:14px;background:linear-gradient(90deg,#fff6,${project.accent})}
 .wrap{position:absolute;inset:0;padding:92px 88px 84px;display:flex;flex-direction:column;color:#fff}
 .top{display:flex;align-items:center;gap:16px;margin-bottom:48px}
-.logo{height:58px;width:auto;filter:drop-shadow(0 3px 12px rgba(0,0,0,.45))}
-.flag{font-size:34px}
+.mark{height:56px;width:auto;filter:drop-shadow(0 4px 14px rgba(0,0,0,.45))}
+.brand{font-family:'Inter',sans-serif;font-weight:700;font-size:34px;color:#fff;letter-spacing:.01em;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+.flag{font-size:32px}
 .kicker{font-family:'Inter',sans-serif;font-weight:700;font-size:19px;letter-spacing:.24em;text-transform:uppercase;color:#fff;opacity:.9;margin-bottom:22px;display:flex;align-items:center;gap:12px}
 .kicker::before{content:"";width:44px;height:3px;background:#fff;border-radius:3px}
 h1{font-weight:900;font-size:82px;line-height:1.1;letter-spacing:-.01em;text-shadow:0 4px 26px rgba(0,0,0,.45)}
@@ -82,7 +83,7 @@ h1{font-weight:900;font-size:82px;line-height:1.1;letter-spacing:-.01em;text-sha
 </style></head><body>
 <div class="photo"></div><div class="ov"></div><div class="grain"></div><div class="bar"></div>
 <div class="wrap">
- <div class="top"><img class="logo" src="${project.logoInverse}"><span class="flag">${project.flag}</span></div>
+ <div class="top"><img class="mark" src="${project.mark}"><span class="brand">${project.name}</span><span class="flag">${project.flag}</span></div>
  <div class="kicker">${project.name}</div>
  <h1>${feat.t}</h1>
  <div class="desc">${feat.d}</div>

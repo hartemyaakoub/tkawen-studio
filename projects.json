@@ -48,7 +48,8 @@
         590016,
         905163
       ],
-      "logoInverse": "https://brand.tkawen.com/products/mystoq/logo-inverse.svg"
+      "logoInverse": "https://brand.tkawen.com/products/mystoq/logo-inverse.svg",
+      "mark": "https://brand.tkawen.com/products/mystoq/mark.svg"
     },
     {
       "key": "algeriacertify",
@@ -86,7 +87,8 @@
         5439381,
         4427622
       ],
-      "logoInverse": "https://brand.tkawen.com/products/certify/logo-inverse.svg"
+      "logoInverse": "https://brand.tkawen.com/products/certify/logo-inverse.svg",
+      "mark": "https://brand.tkawen.com/products/certify/mark.svg"
     },
     {
       "key": "liqaa",
@@ -124,7 +126,8 @@
         1181676,
         3184430
       ],
-      "logoInverse": "https://brand.tkawen.com/products/liqaa/logo-inverse.svg"
+      "logoInverse": "https://brand.tkawen.com/products/liqaa/logo-inverse.svg",
+      "mark": "https://brand.tkawen.com/products/liqaa/mark.svg"
     },
     {
       "key": "pharmapro",
@@ -162,7 +165,8 @@
         2095953,
         3184432
       ],
-      "logoInverse": "https://brand.tkawen.com/products/pharmapro/logo-inverse.svg"
+      "logoInverse": "https://brand.tkawen.com/products/pharmapro/logo-inverse.svg",
+      "mark": "https://brand.tkawen.com/products/pharmapro/mark.svg"
     },
     {
       "key": "catalogue",
@@ -196,7 +200,8 @@
         3184292,
         256417
       ],
-      "logoInverse": "https://brand.tkawen.com/parent/tkawen-logo-inverse.svg"
+      "logoInverse": "https://brand.tkawen.com/parent/tkawen-logo-inverse.svg",
+      "mark": "https://brand.tkawen.com/parent/tkawen-mark.svg"
     },
     {
       "key": "tkawen",
@@ -230,7 +235,8 @@
         574071,
         3184325
       ],
-      "logoInverse": "https://brand.tkawen.com/parent/tkawen-logo-inverse.svg"
+      "logoInverse": "https://brand.tkawen.com/parent/tkawen-logo-inverse.svg",
+      "mark": "https://brand.tkawen.com/parent/tkawen-mark.svg"
     }
   ]
 }
