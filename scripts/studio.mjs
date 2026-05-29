@@ -68,9 +68,9 @@ body{font-family:'Cairo',sans-serif;position:relative;background:#0f172a}
 .grain{position:absolute;inset:0;background:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:26px 26px}
 .bar{position:absolute;top:0;right:0;left:0;height:14px;background:linear-gradient(90deg,#fff6,${project.accent})}
 .wrap{position:absolute;inset:0;padding:92px 88px 84px;display:flex;flex-direction:column;color:#fff}
-.top{display:flex;align-items:center;gap:14px;margin-bottom:48px}
-.dot{width:46px;height:46px;border-radius:13px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 8px 22px rgba(0,0,0,.3)}
-.brand{font-family:'Inter',sans-serif;font-weight:700;font-size:30px;letter-spacing:.01em;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.top{display:flex;align-items:center;gap:16px;margin-bottom:48px}
+.logo{height:58px;width:auto;filter:drop-shadow(0 3px 12px rgba(0,0,0,.45))}
+.flag{font-size:34px}
 .kicker{font-family:'Inter',sans-serif;font-weight:700;font-size:19px;letter-spacing:.24em;text-transform:uppercase;color:#fff;opacity:.9;margin-bottom:22px;display:flex;align-items:center;gap:12px}
 .kicker::before{content:"";width:44px;height:3px;background:#fff;border-radius:3px}
 h1{font-weight:900;font-size:82px;line-height:1.1;letter-spacing:-.01em;text-shadow:0 4px 26px rgba(0,0,0,.45)}
@@ -82,7 +82,7 @@ h1{font-weight:900;font-size:82px;line-height:1.1;letter-spacing:-.01em;text-sha
 </style></head><body>
 <div class="photo"></div><div class="ov"></div><div class="grain"></div><div class="bar"></div>
 <div class="wrap">
- <div class="top"><span class="dot">${project.flag}</span><span class="brand">${project.name}</span></div>
+ <div class="top"><img class="logo" src="${project.logoInverse}"><span class="flag">${project.flag}</span></div>
  <div class="kicker">${project.name}</div>
  <h1>${feat.t}</h1>
  <div class="desc">${feat.d}</div>
