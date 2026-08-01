@@ -1,0 +1,12 @@
+platform: liqaa
+voice: ismael
+preset: default
+tts_mode: api
+api_remote_mode: sovereign  # default to local Piper for cost · switch to cloud for hero videos
+brand:
+  primary: "1d4ed8"
+  accent: "06b6d4"
+  tint_overlay: "1d4ed808"
+  font: Cairo
+base_url: https://liqaa.io
+default_outro: "Liqaa dot I O. لقاء بنقرة واحدة."

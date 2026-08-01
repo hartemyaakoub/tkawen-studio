@@ -1,0 +1,12 @@
+platform: mystoq-beauty
+voice: amina
+preset: default
+tts_mode: api               # use tts.tkawen.com infra
+api_remote_mode: cloud      # request DZ Amina (Azure) on remote
+brand:
+  primary: "1d4ed8"
+  accent: "ec4899"
+  tint_overlay: "ec489908"
+  font: Cairo
+base_url: https://mystoq.com
+default_outro: "Mystoq dot com slash beauty. Link in bio."

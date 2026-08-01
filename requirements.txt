@@ -1,0 +1,11 @@
+# API-first stack (delegates TTS to tts.tkawen.com)
+requests>=2.31.0                  # Apache · API client (default mode)
+openai-whisper>=20240930          # MIT · local STT for captions
+playwright>=1.50.0                # Apache · local browser automation
+ffmpeg-python>=0.2.0              # Apache · local video composition
+pyyaml>=6.0                       # MIT · script frontmatter
+python-frontmatter>=1.1.0         # MIT · markdown parsing
+
+# Local fallback engines (only if running offline · mode=sovereign|cloud)
+piper-tts>=1.2.0                  # MIT · 100% local
+azure-cognitiveservices-speech>=1.40.0  # cloud · direct Azure (testing)
