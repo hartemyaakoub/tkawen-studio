@@ -67,7 +67,8 @@ def _via_api(text: str, config: RouterConfig) -> dict:
 
     api_cfg = APIClientConfig(
         api_url=config.api_url,
-        api_key=config.api_key or "tkw_demo_internal",
+        # empty is correct: api_client reads TKAWEN_API_KEY and fails closed
+        api_key=config.api_key,
         voice=config.voice,
         remote_mode=config.api_remote_mode,
         preset=config.preset,

@@ -16,14 +16,22 @@ import requests
 # Default endpoint (production)
 DEFAULT_API_URL = "https://tts.tkawen.com"
 
-# Default API key (replace via env)
-DEFAULT_API_KEY = "tkw_demo_internal"
+# There is deliberately no default key. A working credential used to sit here
+# as a fallback, which meant anyone holding the source held the account: the
+# key was verified live (no key -> 401, that key -> 200). The key now comes
+# from the environment only, and its absence fails closed rather than quietly
+# spending someone else's quota.
+API_KEY_ENV = "TKAWEN_API_KEY"
+
+
+class MissingAPIKey(RuntimeError):
+    pass
 
 
 @dataclass
 class APIClientConfig:
     api_url: str = DEFAULT_API_URL
-    api_key: str = DEFAULT_API_KEY
+    api_key: str = ""
     timeout_seconds: int = 60
     voice: str = "amina"               # logical voice name
     remote_mode: str = "sovereign"      # mode the REMOTE API should use
@@ -34,7 +42,11 @@ class APIClientConfig:
 def synthesize(text: str, config: APIClientConfig) -> dict:
     """Synthesize via tts.tkawen.com API. Saves MP3 to output_path."""
     api_url = (os.environ.get("TKAWEN_TTS_URL") or config.api_url).rstrip("/")
-    api_key = os.environ.get("TKAWEN_API_KEY") or config.api_key
+    api_key = os.environ.get(API_KEY_ENV) or config.api_key
+    if not api_key:
+        raise MissingAPIKey(
+            f"no TTS credential: set {API_KEY_ENV} in the environment "
+            f"(see .env.example), or pass --api-key")
 
     Path(config.output_path).parent.mkdir(parents=True, exist_ok=True)
 
@@ -104,7 +116,7 @@ if __name__ == "__main__":
     parser.add_argument("--voice", default="amina")
     parser.add_argument("--remote-mode", default="sovereign", choices=["sovereign", "cloud", "hybrid"])
     parser.add_argument("--api-url", default=DEFAULT_API_URL)
-    parser.add_argument("--api-key", default=DEFAULT_API_KEY)
+    parser.add_argument("--api-key", default="")
     args = parser.parse_args()
 
     text = args.text
